@@ -10,6 +10,7 @@ Core orchestration layer. Handles:
 """
 
 import logging
+import uuid
 from uuid import UUID
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,7 +52,11 @@ class SessionManager:
     # ── Session Lifecycle ─────────────────────────────────
 
     async def create_session(self, user_id: UUID | None = None) -> Session:
+        # Generate UUID first so we can use it for both session and state
+        session_id = str(uuid.uuid4())
+        
         session = Session(
+            id=session_id,
             user_id=user_id,
             status=SessionStatus.active,
             stage=SessionStage.initial,
@@ -60,7 +65,7 @@ class SessionManager:
 
         # Create empty state row
         state = SessionState(
-            session_id=session.id,
+            session_id=session_id,
             location=[],
             sensations=[],
             modalities=[],
@@ -70,7 +75,7 @@ class SessionManager:
         self.db.add(state)
         await self.db.flush()
 
-        logger.info(f"Created session {session.id}")
+        logger.info(f"Created session {session_id}")
         return session
 
     async def get_session(self, session_id: UUID) -> Session | None:
