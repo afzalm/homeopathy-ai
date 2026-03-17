@@ -4,20 +4,39 @@ REM Simple startup script for Homeopathy AI on Windows
 echo.
 echo 🏥 Starting Homeopathy AI API...
 echo.
-echo Checking dependencies...
 
-REM Check if Python is installed
-python --version >nul 2>&1
-if errorlevel 1 (
-    echo ❌ Python is not installed or not in PATH. Please install Python 3.10+
+REM Try to find Python
+set PYTHON_CMD=
+for /f "delims=" %%i in ('where python 2^>nul') do set PYTHON_CMD=%%i
+if "%PYTHON_CMD%"=="" (
+    for /f "delims=" %%i in ('where python3 2^>nul') do set PYTHON_CMD=%%i
+)
+if "%PYTHON_CMD%"=="" (
+    for /f "delims=" %%i in ('where py 2^>nul') do set PYTHON_CMD=%%i
+)
+
+if "%PYTHON_CMD%"=="" (
+    echo ❌ Python is not installed or not in PATH.
+    echo.
+    echo Please install Python 3.10+ from: https://www.python.org/downloads/
+    echo Make sure to check "Add Python to PATH" during installation.
+    echo.
     pause
     exit /b 1
 )
 
+echo ✅ Found Python: %PYTHON_CMD%
+echo.
+
 REM Check if virtual environment exists, create if not
 if not exist "venv" (
     echo 📦 Creating virtual environment...
-    python -m venv venv
+    "%PYTHON_CMD%" -m venv venv
+    if errorlevel 1 (
+        echo ❌ Failed to create virtual environment
+        pause
+        exit /b 1
+    )
 )
 
 REM Activate virtual environment
@@ -27,6 +46,11 @@ call venv\Scripts\activate.bat
 REM Install/update dependencies
 echo 📚 Installing dependencies...
 pip install -q -r requirements.txt
+if errorlevel 1 (
+    echo ❌ Failed to install dependencies
+    pause
+    exit /b 1
+)
 
 REM Check if .env exists
 if not exist ".env" (
