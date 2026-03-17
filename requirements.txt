@@ -1,0 +1,23 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.29.0
+pydantic==2.9.0
+pydantic-settings==2.5.0
+python-dotenv==1.0.1
+
+# LLM providers (install the one you use)
+anthropic==0.34.0
+# openai==1.47.0
+
+# Embeddings & RAG
+langchain==0.3.0
+langchain-community==0.3.0
+sentence-transformers==3.1.0
+pgvector==0.3.2
+
+# Neo4j
+neo4j==5.24.0
+
+# Redis (session caching)
+redis==5.1.0
