@@ -1,5 +1,5 @@
 """
-Async PostgreSQL database connection via SQLAlchemy + asyncpg.
+Async database connection via SQLAlchemy + aiosqlite.
 """
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
@@ -9,11 +9,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# SQLite doesn't support pool_size/max_overflow, only use for PostgreSQL
+engine_kwargs = {}
+if "sqlite" not in settings.DATABASE_URL:
+    engine_kwargs = {"pool_size": 10, "max_overflow": 20}
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,
-    pool_size=10,
-    max_overflow=20,
+    **engine_kwargs
 )
 
 AsyncSessionLocal = async_sessionmaker(
