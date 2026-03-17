@@ -3,10 +3,11 @@ SQLAlchemy ORM models — maps to PostgreSQL schema.
 """
 
 import uuid
+import json
 from datetime import datetime
 from sqlalchemy import (
     Column, String, Integer, Float, Boolean,
-    ForeignKey, DateTime, Text, ARRAY, Enum
+    ForeignKey, DateTime, Text, Enum, JSON
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -49,8 +50,8 @@ class OutcomeResult(str, enum.Enum):
 class Session(Base):
     __tablename__ = "sessions"
 
-    id             = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id        = Column(UUID(as_uuid=True), nullable=True)
+    id             = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id        = Column(String(36), nullable=True)
     created_at     = Column(DateTime, default=datetime.utcnow)
     updated_at     = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     status         = Column(Enum(SessionStatus), default=SessionStatus.active)
@@ -69,8 +70,8 @@ class Session(Base):
 class Message(Base):
     __tablename__ = "messages"
 
-    id         = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), nullable=False)
+    id         = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id = Column(String(36), ForeignKey("sessions.id"), nullable=False)
     role       = Column(Enum(MessageRole),  nullable=False)
     content    = Column(Text,               nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -84,11 +85,11 @@ class SessionState(Base):
     __tablename__ = "session_state"
 
     session_id      = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), primary_key=True)
-    location        = Column(ARRAY(String), default=list)
-    sensations      = Column(ARRAY(String), default=list)
-    modalities      = Column(ARRAY(String), default=list)
-    mental_symptoms = Column(ARRAY(String), default=list)
-    generals        = Column(ARRAY(String), default=list)
+    location        = Column(JSON, default=list)
+    sensations      = Column(JSON, default=list)
+    modalities      = Column(JSON, default=list)
+    mental_symptoms = Column(JSON, default=list)
+    generals        = Column(JSON, default=list)
     last_updated    = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     session = relationship("Session", back_populates="session_state")
@@ -99,15 +100,15 @@ class SessionState(Base):
 class SessionSymptom(Base):
     __tablename__ = "session_symptoms"
 
-    id                = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id        = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), nullable=False)
+    id                = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id        = Column(String(36), ForeignKey("sessions.id"), nullable=False)
     symptom_text      = Column(Text,    nullable=False)
     rubric_id         = Column(Integer, nullable=True)
     rubric_path       = Column(Text,    nullable=True)
     confidence        = Column(Float,   default=1.0)
     is_active         = Column(Boolean, default=True)
-    source_message_id = Column(UUID(as_uuid=True), ForeignKey("messages.id"), nullable=True)
-    superseded_by     = Column(UUID(as_uuid=True), ForeignKey("session_symptoms.id"), nullable=True)
+    source_message_id = Column(String(36), ForeignKey("messages.id"), nullable=True)
+    superseded_by     = Column(String(36), ForeignKey("session_symptoms.id"), nullable=True)
     created_at        = Column(DateTime, default=datetime.utcnow)
 
     session = relationship("Session", back_populates="session_symptoms")
@@ -118,8 +119,8 @@ class SessionSymptom(Base):
 class SessionRubric(Base):
     __tablename__ = "session_rubrics"
 
-    id         = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), nullable=False)
+    id         = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id = Column(String(36), ForeignKey("sessions.id"), nullable=False)
     rubric_id  = Column(Integer, nullable=False)
     rubric_path= Column(Text,    nullable=False)
     confidence = Column(Float,   default=1.0)
@@ -133,8 +134,8 @@ class SessionRubric(Base):
 class AskedQuestion(Base):
     __tablename__ = "asked_questions"
 
-    id            = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id    = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), nullable=False)
+    id            = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id    = Column(String(36), ForeignKey("sessions.id"), nullable=False)
     question_type = Column(String, nullable=False)   # location / sensation / modality / mental / general
     question_text = Column(Text,   nullable=False)
     created_at    = Column(DateTime, default=datetime.utcnow)
@@ -183,8 +184,8 @@ class RubricRemedy(Base):
 class Case(Base):
     __tablename__ = "cases"
 
-    id          = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    session_id  = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), nullable=True)
+    id          = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id  = Column(String(36), ForeignKey("sessions.id"), nullable=True)
     patient_age = Column(Integer, nullable=True)
     gender      = Column(String,  nullable=True)
     date        = Column(DateTime, default=datetime.utcnow)
@@ -198,8 +199,8 @@ class Case(Base):
 class CaseSymptom(Base):
     __tablename__ = "case_symptoms"
 
-    id        = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    case_id   = Column(UUID(as_uuid=True), ForeignKey("cases.id"), nullable=False)
+    id        = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    case_id   = Column(String(36), ForeignKey("cases.id"), nullable=False)
     rubric_id = Column(Integer, ForeignKey("rubrics.id"), nullable=False)
 
     case = relationship("Case", back_populates="symptoms")
@@ -208,8 +209,8 @@ class CaseSymptom(Base):
 class CaseRemedy(Base):
     __tablename__ = "case_remedies"
 
-    id        = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    case_id   = Column(UUID(as_uuid=True), ForeignKey("cases.id"), nullable=False)
+    id        = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    case_id   = Column(String(36), ForeignKey("cases.id"), nullable=False)
     remedy_id = Column(Integer, ForeignKey("remedies.id"), nullable=False)
     potency   = Column(String,  nullable=True)
     outcome   = Column(Enum(OutcomeResult), default=OutcomeResult.unknown)
