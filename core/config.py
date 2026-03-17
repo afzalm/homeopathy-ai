@@ -4,7 +4,7 @@ Copy .env.example to .env and fill in your values.
 """
 
 from pydantic_settings import BaseSettings
-from typing import list
+from collections.abc import Iterable
 
 
 class Settings(BaseSettings):
@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Homeopathy AI"
     DEBUG: bool = False
     SECRET_KEY: str = "change-me-in-production"
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
+    ALLOWED_ORIGINS: Iterable[str] = ["http://localhost:3000"]
 
     # ── PostgreSQL ────────────────────────────────────────
     DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/homeopathy_ai"
