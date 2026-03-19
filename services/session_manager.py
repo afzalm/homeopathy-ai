@@ -51,7 +51,7 @@ class SessionManager:
 
     # ── Session Lifecycle ─────────────────────────────────
 
-    async def create_session(self, user_id: UUID | None = None) -> Session:
+    async def create_session(self, user_id: str | None = None) -> Session:
         # Generate UUID first so we can use it for both session and state
         session_id = str(uuid.uuid4())
         
@@ -78,13 +78,13 @@ class SessionManager:
         logger.info(f"Created session {session_id}")
         return session
 
-    async def get_session(self, session_id: UUID) -> Session | None:
+    async def get_session(self, session_id: str) -> Session | None:
         result = await self.db.execute(
             select(Session).where(Session.id == session_id)
         )
         return result.scalar_one_or_none()
 
-    async def get_session_state(self, session_id: UUID) -> SessionState | None:
+    async def get_session_state(self, session_id: str) -> SessionState | None:
         result = await self.db.execute(
             select(SessionState).where(SessionState.session_id == session_id)
         )
@@ -94,7 +94,7 @@ class SessionManager:
 
     async def store_message(
         self,
-        session_id: UUID,
+        session_id: str,
         role: MessageRole,
         content: str
     ) -> Message:
@@ -107,7 +107,7 @@ class SessionManager:
         await self.db.flush()
         return message
 
-    async def get_conversation_history(self, session_id: UUID) -> list[Message]:
+    async def get_conversation_history(self, session_id: str) -> list[Message]:
         result = await self.db.execute(
             select(Message)
             .where(Message.session_id == session_id)
@@ -119,9 +119,9 @@ class SessionManager:
 
     async def update_symptoms(
         self,
-        session_id: UUID,
+        session_id: str,
         extracted: list[SymptomExtracted],
-        source_message_id: UUID
+        source_message_id: str
     ):
         """Add newly extracted symptoms to session state."""
         state = await self.get_session_state(session_id)
@@ -180,7 +180,7 @@ class SessionManager:
 
     # ── Question Planning ─────────────────────────────────
 
-    async def get_missing_dimensions(self, session_id: UUID) -> list[str]:
+    async def get_missing_dimensions(self, session_id: str) -> list[str]:
         """Returns dimensions not yet collected, in priority order."""
         state = await self.get_session_state(session_id)
         if not state:
@@ -196,7 +196,7 @@ class SessionManager:
         # Sort by priority
         return [d for d in DIMENSION_PRIORITY if d in missing]
 
-    async def plan_next_question(self, session_id: UUID) -> str | None:
+    async def plan_next_question(self, session_id: str) -> str | None:
         """
         Returns the next question to ask, or None if analysis is ready.
         Uses rule-based question planner — no LLM improvisation.
@@ -213,7 +213,7 @@ class SessionManager:
 
         return None  # All dimensions covered — ready for analysis
 
-    async def _get_asked_question_types(self, session_id: UUID) -> set[str]:
+    async def _get_asked_question_types(self, session_id: str) -> set[str]:
         result = await self.db.execute(
             select(AskedQuestion.question_type)
             .where(AskedQuestion.session_id == session_id)
@@ -222,7 +222,7 @@ class SessionManager:
 
     async def _record_question(
         self,
-        session_id: UUID,
+        session_id: str,
         question_type: str,
         question_text: str
     ):
@@ -236,7 +236,7 @@ class SessionManager:
 
     # ── Stage Management ──────────────────────────────────
 
-    async def advance_stage(self, session_id: UUID) -> SessionStage:
+    async def advance_stage(self, session_id: str) -> SessionStage:
         session = await self.get_session(session_id)
         if not session:
             raise ValueError(f"Session {session_id} not found")
@@ -261,7 +261,7 @@ class SessionManager:
 
     # ── Repertory Trigger ─────────────────────────────────
 
-    async def is_analysis_ready(self, session_id: UUID) -> bool:
+    async def is_analysis_ready(self, session_id: str) -> bool:
         """
         Checks if enough rubrics have been collected to trigger analysis.
         Threshold: settings.MIN_RUBRICS_FOR_ANALYSIS (default: 4)

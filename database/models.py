@@ -84,7 +84,7 @@ class Message(Base):
 class SessionState(Base):
     __tablename__ = "session_state"
 
-    session_id      = Column(UUID(as_uuid=True), ForeignKey("sessions.id"), primary_key=True)
+    session_id      = Column(String(36), ForeignKey("sessions.id"), primary_key=True)
     location        = Column(JSON, default=list)
     sensations      = Column(JSON, default=list)
     modalities      = Column(JSON, default=list)

@@ -10,7 +10,6 @@ PATCH /api/v1/cases/{id}/remedies/{rid}    — update outcome
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from uuid import UUID
 
 from core.database import get_db
 from database.models import Case, CaseRemedy, CaseSymptom

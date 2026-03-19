@@ -7,8 +7,10 @@ Version: 1.0
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 import logging
+import os
 
 from core.config import settings
 from core.database import init_db
@@ -57,6 +59,33 @@ app.include_router(session_router, prefix="/api/v1/sessions",  tags=["Sessions"]
 app.include_router(chat_router,    prefix="/api/v1/chat",      tags=["Chat"])
 app.include_router(remedy_router,  prefix="/api/v1/remedies",  tags=["Remedies"])
 app.include_router(case_router,    prefix="/api/v1/cases",     tags=["Cases"])
+
+
+# ── Static Files ──────────────────────────────────────────
+@app.get("/chat", tags=["Chat UI"])
+async def chat_ui():
+    """Serve the chat interface."""
+    chat_path = os.path.join(os.path.dirname(__file__), "static", "chat.html")
+    return FileResponse(chat_path)
+
+
+@app.get("/", tags=["Root"])
+async def root():
+    """Root endpoint with API information."""
+    return {
+        "name": "Homeopathy AI Decision Support System",
+        "version": "1.0.0",
+        "description": "AI-powered homeopathic case analysis and remedy recommendation",
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "health": "/health",
+        "endpoints": {
+            "sessions": "/api/v1/sessions",
+            "chat": "/api/v1/chat",
+            "remedies": "/api/v1/remedies",
+            "cases": "/api/v1/cases"
+        }
+    }
 
 
 @app.get("/health", tags=["Health"])

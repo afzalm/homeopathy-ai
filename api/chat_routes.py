@@ -8,7 +8,6 @@ GET  /api/v1/chat/{session_id}/history  — get conversation history
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid import UUID
 from datetime import datetime
 
 from core.database import get_db
@@ -31,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 @router.post("/{session_id}/message", response_model=ChatResponse)
 async def send_message(
-    session_id: UUID,
+    session_id: str,
     body:       ChatRequest,
     db:         AsyncSession = Depends(get_db),
 ):
@@ -120,7 +119,7 @@ async def send_message(
 
 @router.post("/{session_id}/analyse", response_model=AnalysisResponse)
 async def analyse_case(
-    session_id: UUID,
+    session_id: str,
     db:         AsyncSession = Depends(get_db),
 ):
     """
@@ -226,7 +225,7 @@ async def analyse_case(
 
 @router.get("/{session_id}/history", response_model=list[MessageResponse])
 async def get_history(
-    session_id: UUID,
+    session_id: str,
     db:         AsyncSession = Depends(get_db),
 ):
     """Return full conversation history for a session."""

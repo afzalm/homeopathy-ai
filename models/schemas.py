@@ -12,12 +12,12 @@ from database.models import SessionStage, SessionStatus, MessageRole, OutcomeRes
 # ── Session ───────────────────────────────────────────────
 
 class SessionCreate(BaseModel):
-    user_id: Optional[UUID] = None
+    user_id: Optional[str] = None
 
 
 class SessionResponse(BaseModel):
-    id:         UUID
-    user_id:    Optional[UUID]
+    id:         str
+    user_id:    Optional[str]
     status:     SessionStatus
     stage:      SessionStage
     created_at: datetime
@@ -34,8 +34,8 @@ class MessageCreate(BaseModel):
 
 
 class MessageResponse(BaseModel):
-    id:         UUID
-    session_id: UUID
+    id:         str
+    session_id: str
     role:       MessageRole
     content:    str
     created_at: datetime
@@ -59,18 +59,18 @@ class SymptomExtracted(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    session_id:          UUID
+    session_id:          str
     reply:               str
     stage:               SessionStage
     symptoms_extracted:  list[SymptomExtracted]
     analysis_ready:      bool
-    message_id:          UUID
+    message_id:          str
 
 
 # ── Symptom State ─────────────────────────────────────────
 
 class SessionStateResponse(BaseModel):
-    session_id:      UUID
+    session_id:      str
     stage:           SessionStage
     location:        list[str]
     sensations:      list[str]
@@ -111,7 +111,7 @@ class MateriaMedicaExcerpt(BaseModel):
 
 
 class AnalysisResponse(BaseModel):
-    session_id:       UUID
+    session_id:       str
     top_remedies:     list[RemedyScore]
     materia_medica:   list[MateriaMedicaExcerpt]
     explanation:      str
@@ -122,7 +122,7 @@ class AnalysisResponse(BaseModel):
 # ── Cases ─────────────────────────────────────────────────
 
 class CaseCreate(BaseModel):
-    session_id:  Optional[UUID]  = None
+    session_id:  Optional[str]  = None
     patient_age: Optional[int]   = None
     gender:      Optional[str]   = None
     notes:       Optional[str]   = None
@@ -135,8 +135,8 @@ class CaseRemedyCreate(BaseModel):
 
 
 class CaseResponse(BaseModel):
-    id:         UUID
-    session_id: Optional[UUID]
+    id:         str
+    session_id: Optional[str]
     date:       datetime
     notes:      Optional[str]
 

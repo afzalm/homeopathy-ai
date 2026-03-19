@@ -8,7 +8,6 @@ GET  /api/v1/sessions/{id}/state — get full state
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid import UUID
 
 from core.database import get_db
 from services.session_manager import SessionManager
@@ -31,7 +30,7 @@ async def create_session(
 
 @router.get("/{session_id}", response_model=SessionResponse)
 async def get_session(
-    session_id: UUID,
+    session_id: str,
     db:         AsyncSession = Depends(get_db),
 ):
     manager = SessionManager(db)
@@ -43,7 +42,7 @@ async def get_session(
 
 @router.get("/{session_id}/state", response_model=SessionStateResponse)
 async def get_session_state(
-    session_id: UUID,
+    session_id: str,
     db:         AsyncSession = Depends(get_db),
 ):
     """Return full structured state of the session."""
