@@ -36,7 +36,7 @@ async def create_case(
 
 @router.get("/{case_id}", response_model=CaseResponse)
 async def get_case(
-    case_id: UUID,
+    case_id: str,
     db:      AsyncSession = Depends(get_db),
 ):
     result = await db.execute(select(Case).where(Case.id == case_id))
@@ -48,7 +48,7 @@ async def get_case(
 
 @router.post("/{case_id}/remedies", status_code=201)
 async def add_case_remedy(
-    case_id: UUID,
+    case_id: str,
     body:    CaseRemedyCreate,
     db:      AsyncSession = Depends(get_db),
 ):
@@ -71,7 +71,7 @@ async def add_case_remedy(
 
 @router.patch("/{case_id}/remedies/{remedy_id}")
 async def update_outcome(
-    case_id:   UUID,
+    case_id:   str,
     remedy_id: int,
     outcome:   str,
     db:        AsyncSession = Depends(get_db),
