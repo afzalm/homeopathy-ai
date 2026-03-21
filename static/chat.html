@@ -1,299 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeopathy AI Chat</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .chat-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 600px;
-            overflow: hidden;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .chat-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-        .chat-header p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-        .session-info {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .session-info input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            transition: border-color 0.3s;
-        }
-        .session-info input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .session-info button {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        .session-info button:hover {
-            transform: scale(1.05);
-        }
-        .chat-messages {
-            height: 400px;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .message {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 18px;
-            line-height: 1.4;
-        }
-        .message.user {
-            align-self: flex-end;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-        .message.assistant {
-            align-self: flex-start;
-            background: #f1f3f4;
-            color: #333;
-            border-bottom-left-radius: 5px;
-        }
-        .message.system {
-            align-self: center;
-            background: #fff3cd;
-            color: #856404;
-            font-size: 0.85rem;
-            text-align: center;
-            max-width: 90%;
-        }
-        .chat-input {
-            padding: 20px;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            gap: 10px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e9ecef;
-            border-radius: 25px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .chat-input input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .chat-input button {
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: transform 0.2s;
-        }
-        .chat-input button:hover {
-            transform: scale(1.05);
-        }
-        .chat-input button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .typing {
-            display: none;
-            align-self: flex-start;
-            background: #f1f3f4;
-            padding: 12px 18px;
-            border-radius: 18px;
-            border-bottom-left-radius: 5px;
-        }
-        .typing.active {
-            display: block;
-        }
-        .typing span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #667eea;
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: typing 1s infinite;
-        }
-        .typing span:nth-child(2) { animation-delay: 0.2s; }
-        .typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeopathy AI DSS Console</title>
+<style>
+:root{--bg:#f3ecdf;--panel:rgba(255,250,243,.92);--panel2:rgba(255,246,235,.98);--border:rgba(84,60,34,.12);--text:#2d2219;--muted:#6f5f51;--accent:#8a3f1f;--sage:#66785c;--shadow:0 24px 60px rgba(66,41,19,.14);--radius:18px;--ui:"Segoe UI",Tahoma,sans-serif;--display:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;font-family:var(--ui);color:var(--text);background:radial-gradient(circle at top left,rgba(192,138,73,.25),transparent 30%),radial-gradient(circle at bottom right,rgba(102,120,92,.14),transparent 30%),linear-gradient(135deg,#f8f2e9 0%,#efe4d2 45%,#f4ede2 100%)}
+.app{width:min(1440px,calc(100% - 28px));margin:14px auto;padding:16px;border-radius:28px;background:rgba(255,252,247,.58);border:1px solid rgba(84,60,34,.1);backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.topbar,.layout{display:grid;gap:16px}.topbar{grid-template-columns:1.45fr 1fr;margin-bottom:16px}.layout{grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr)}
+.hero,.summary,.panel{background:var(--panel);border:1px solid var(--border);border-radius:24px;overflow:hidden}.hero{padding:26px 28px;min-height:180px}.summary{padding:22px;display:flex;flex-direction:column;gap:16px;justify-content:space-between}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}.eyebrow:before{content:"";width:34px;height:1px;background:currentColor}
+.hero h1,.summary h2,.panel-head h2,.section h3{font-family:var(--display)}.hero h1{font-size:clamp(2rem,4vw,3.2rem);line-height:.96;max-width:12ch;margin-bottom:14px}.hero p,.summary p,.panel-head p,.helper,.composer-note,.footer-note{color:var(--muted);line-height:1.55}
+.summary-grid,.strip,.grid-two{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:14px;border-radius:12px;background:var(--panel2);border:1px solid rgba(84,60,34,.08)}.stat strong{display:block;margin-bottom:4px;font-size:1.32rem;font-family:var(--display)}
+.consultation,.dss{min-height:780px;display:grid}.consultation{grid-template-rows:auto auto auto 1fr auto}.dss{grid-template-rows:auto auto 1fr}.panel-head{display:flex;justify-content:space-between;gap:16px;padding:22px 24px 16px;border-bottom:1px solid rgba(84,60,34,.08)}.panel-head h2{font-size:1.45rem;margin-bottom:4px}
+.badge,.tag,.chip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;font-size:.84rem}.badge{padding:9px 13px;background:rgba(192,138,73,.18);color:var(--accent);border:1px solid rgba(138,63,31,.12);text-transform:uppercase;letter-spacing:.08em}.badge.ready{background:rgba(102,120,92,.18);color:#30452d}
+.toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:10px;padding:18px 24px;border-bottom:1px solid rgba(84,60,34,.08);background:rgba(255,247,236,.7)}
+.input,.composer textarea{width:100%;border:1px solid rgba(84,60,34,.14);border-radius:12px;background:rgba(255,252,248,.98);color:var(--text);font:inherit}.input{min-height:48px;padding:0 15px}.input:focus,.composer textarea:focus{outline:none;border-color:rgba(138,63,31,.42);box-shadow:0 0 0 4px rgba(138,63,31,.08)}
+.button{min-height:48px;padding:0 18px;border-radius:12px;border:none;cursor:pointer;font:inherit;font-weight:700}.button:disabled{opacity:.55;cursor:not-allowed}.button-primary{background:linear-gradient(135deg,#8a3f1f 0%,#b0532f 100%);color:#fff8ef}.button-soft{background:rgba(192,138,73,.22);color:var(--accent);border:1px solid rgba(138,63,31,.1)}.button-quiet{background:rgba(102,120,92,.12);color:#30452d;border:1px solid rgba(102,120,92,.14)}
+.session-meta{display:flex;flex-wrap:wrap;gap:10px;padding:14px 24px;border-bottom:1px solid rgba(84,60,34,.08)}.tag{padding:8px 12px;background:rgba(255,247,236,.88);border:1px solid rgba(84,60,34,.08)}.tag strong{color:var(--muted)}
+.messages{overflow-y:auto;padding:20px 24px 12px;display:flex;flex-direction:column;gap:14px;min-height:0}.message{max-width:86%;padding:14px 16px;border-radius:18px;line-height:1.5}.message small{display:block;margin-top:6px;opacity:.68;font-size:.76rem}.message.user{align-self:flex-end;background:linear-gradient(135deg,#6f2e16 0%,#9a4a27 100%);color:#fff8ee;border-bottom-right-radius:6px}.message.assistant{align-self:flex-start;background:rgba(255,248,240,.97);border:1px solid rgba(84,60,34,.08);border-bottom-left-radius:6px}.message.system{align-self:center;max-width:92%;background:rgba(102,120,92,.11);border:1px dashed rgba(102,120,92,.24);color:#34422d;text-align:center}
+.typing{display:none;align-self:flex-start;gap:6px;margin:0 24px;padding:12px 14px;border-radius:16px;background:rgba(255,248,240,.97);border:1px solid rgba(84,60,34,.08)}.typing.active{display:inline-flex}.typing span{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1s infinite ease-in-out}.typing span:nth-child(2){animation-delay:.18s}.typing span:nth-child(3){animation-delay:.36s}@keyframes pulse{0%,100%{opacity:.35;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+.composer{padding:18px 24px 24px;border-top:1px solid rgba(84,60,34,.08);background:rgba(255,249,241,.9)}.composer textarea{min-height:110px;resize:vertical;padding:14px 16px;margin-bottom:12px}.composer-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.strip{padding:18px 24px;border-bottom:1px solid rgba(84,60,34,.08)}.dss-scroll{overflow-y:auto;padding:18px 24px 24px;display:flex;flex-direction:column;gap:16px}.section{padding:18px;border-radius:18px;background:var(--panel2);border:1px solid rgba(84,60,34,.08)}.section h3{font-size:1.18rem;margin-bottom:6px}.helper{font-size:.92rem;margin-bottom:12px}
+.chips,.analysis-meta,.rubric-list{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:8px 12px;background:rgba(192,138,73,.18);border:1px solid rgba(138,63,31,.1)}.chip.ghost{color:var(--muted);background:rgba(102,120,92,.08);border-color:rgba(102,120,92,.12)}.chip.warn{color:#6b4c22;background:rgba(192,138,73,.28)}.mini-card{padding:14px;border-radius:12px;background:rgba(255,252,248,.98);border:1px solid rgba(84,60,34,.07)}.mini-card h4{margin-bottom:10px;color:var(--muted);font-size:.9rem;letter-spacing:.08em;text-transform:uppercase}.mini-card ul{list-style:none;display:flex;flex-direction:column;gap:8px}.mini-card li{padding:8px 10px;border-radius:10px;background:rgba(102,120,92,.08);line-height:1.4;font-size:.9rem}.mini-card li.empty,.empty{color:var(--muted);font-style:italic}
+.note{padding:12px 14px;border-left:4px solid rgba(138,63,31,.35);background:rgba(255,247,236,.8);border-radius:0 12px 12px 0;line-height:1.55}.analysis-card{display:grid;gap:10px;padding:14px;border-radius:12px;background:rgba(255,251,246,.98);border:1px solid rgba(84,60,34,.08)}.analysis-card header{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.analysis-card h4{font-family:var(--display);font-size:1.08rem}.score{color:var(--accent);font-weight:700}.meter{height:8px;border-radius:999px;overflow:hidden;background:rgba(84,60,34,.08)}.meter span{display:block;height:100%;background:linear-gradient(90deg,#c08a49,#8a3f1f)}
+@media (max-width:1180px){.topbar,.layout{grid-template-columns:1fr}.consultation,.dss{min-height:auto}}@media (max-width:860px){.app{width:min(100%,calc(100% - 12px));margin:6px auto;padding:10px}.toolbar{grid-template-columns:1fr 1fr}.toolbar .input{grid-column:1/-1}.summary-grid,.strip,.grid-two{grid-template-columns:1fr}.panel-head,.composer-row{flex-direction:column;align-items:stretch}.message{max-width:94%}}
+</style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>üè• Homeopathy AI</h1>
-            <p>AI-powered homeopathic case analysis</p>
-        </div>
-        
-        <div class="session-info">
-            <input type="text" id="sessionId" placeholder="Session ID (leave empty to create new)">
-            <button onclick="createSession()">New Session</button>
-        </div>
-        
-        <div class="chat-messages" id="chatMessages">
-            <div class="message system">
-                Welcome! Enter a session ID or click "New Session" to start a consultation.
-            </div>
-        </div>
-        
-        <div class="typing" id="typing">
-            <span></span><span></span><span></span>
-        </div>
-        
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()" id="sendBtn">Send</button>
-        </div>
-    </div>
-
-    <script>
-        const API_BASE = 'http://localhost:8000';
-        let currentSessionId = null;
-
-        function addMessage(content, type) {
-            const messagesDiv = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.textContent = content;
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function showTyping() {
-            document.getElementById('typing').classList.add('active');
-        }
-
-        function hideTyping() {
-            document.getElementById('typing').classList.remove('active');
-        }
-
-        async function createSession() {
-            try {
-                const response = await fetch(`${API_BASE}/api/v1/sessions`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
-                });
-                
-                const session = await response.json();
-                currentSessionId = session.id;
-                document.getElementById('sessionId').value = session.id;
-                
-                document.getElementById('chatMessages').innerHTML = '';
-                addMessage('New session created! How can I help you today?', 'system');
-            } catch (error) {
-                addMessage('Error creating session: ' + error.message, 'system');
-            }
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            const sendBtn = document.getElementById('sendBtn');
-            
-            if (!message) return;
-            
-            if (!currentSessionId) {
-                addMessage('Please create a session first!', 'system');
-                return;
-            }
-            
-            addMessage(message, 'user');
-            input.value = '';
-            sendBtn.disabled = true;
-            showTyping();
-            
-            try {
-                const response = await fetch(`${API_BASE}/api/v1/chat/${currentSessionId}/message`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
-                });
-                
-                const data = await response.json();
-                hideTyping();
-                addMessage(data.reply, 'assistant');
-                
-                if (data.analysis_ready) {
-                    addMessage('‚úì Analysis ready! You can now trigger analysis.', 'system');
-                }
-            } catch (error) {
-                hideTyping();
-                addMessage('Error: ' + error.message, 'system');
-            }
-            
-            sendBtn.disabled = false;
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
-
-        // Check for session ID in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const sessionParam = urlParams.get('session');
-        if (sessionParam) {
-            currentSessionId = sessionParam;
-            document.getElementById('sessionId').value = sessionParam;
-            addMessage('Session loaded. How can I help you?', 'system');
-        }
-    </script>
+<div class="app">
+<section class="topbar">
+<div class="hero">
+<div class="eyebrow">Practitioner Console</div>
+<h1>Conversation With Visible Reasoning</h1>
+<p>Use the left side to conduct the consultation. Use the right side to inspect the structured case picture, rubric evidence, readiness status, and remedy analysis.</p>
+</div>
+<aside class="summary">
+<div>
+<h2 style="margin-bottom:8px;">Current Status</h2>
+<p>The conversation is the interface. The DSS panel is the audit trail for what the system extracted and why it is asking the next question.</p>
+</div>
+<div class="summary-grid">
+<div class="stat"><strong id="heroStage">No Session</strong><span>Current stage</span></div>
+<div class="stat"><strong id="heroReady">Waiting</strong><span>Analysis status</span></div>
+<div class="stat"><strong id="heroRubrics">0</strong><span>Unique rubrics</span></div>
+<div class="stat"><strong id="heroMissing">5</strong><span>Missing dimensions</span></div>
+</div>
+<div class="footer-note">Keep the chat focused. Let the DSS state make the reasoning explicit.</div>
+</aside>
+</section>
+<section class="layout">
+<div class="panel consultation">
+<div class="panel-head"><div><h2>Consultation</h2><p>Capture the case narrative, follow the next question, and keep the patient-facing exchange coherent.</p></div><div class="badge" id="analysisBadge">Waiting for enough rubric evidence</div></div>
+<div class="toolbar">
+<input class="input" type="text" id="sessionId" placeholder="Session ID">
+<button class="button button-primary" id="newSessionBtn" onclick="createSession()">New Session</button>
+<button class="button button-soft" id="loadSessionBtn" onclick="loadSession()">Load</button>
+<button class="button button-quiet" id="refreshBtn" onclick="refreshSessionData()">Refresh</button>
+<button class="button button-primary" id="analyseBtn" onclick="runAnalysis()" disabled>Analyse</button>
+</div>
+<div class="session-meta" id="sessionMeta"><span class="tag"><strong>Session:</strong> none</span><span class="tag"><strong>Stage:</strong> waiting</span><span class="tag"><strong>Missing:</strong> 5 dimensions</span></div>
+<div class="messages" id="chatMessages"><div class="message system">Start a new session or load one. The DSS panel will update after every message.</div></div>
+<div class="typing" id="typing"><span></span><span></span><span></span></div>
+<div class="composer">
+<textarea id="messageInput" placeholder="Enter the case narrative, a follow-up answer, or a practitioner note..." onkeydown="handleComposerKey(event)"></textarea>
+<div class="composer-row"><div class="composer-note">Press Enter to send. Use Shift+Enter for a line break.</div><button class="button button-primary" id="sendBtn" onclick="sendMessage()">Send Message</button></div>
+</div>
+</div>
+<div class="panel dss">
+<div class="panel-head"><div><h2>DSS State</h2><p>Inspect the persisted structured case state, rubric evidence, missing information, and analysis output.</p></div><div class="badge" id="stageBadge">No active session</div></div>
+<div class="strip">
+<div class="stat"><strong id="stateStage">No Session</strong><span>Session stage</span></div>
+<div class="stat"><strong id="stateRubrics">0</strong><span>Rubrics captured</span></div>
+<div class="stat"><strong id="stateMissing">5</strong><span>Missing dimensions</span></div>
+<div class="stat"><strong id="stateExtraction">0</strong><span>Latest extraction count</span></div>
+</div>
+<div class="dss-scroll">
+<section class="section">
+<h3>Session Snapshot</h3>
+<p class="helper">What the system currently thinks is happening and why it is still collecting information.</p>
+<div class="chips" id="snapshotChips"></div>
+<div class="note" id="nextActionText" style="margin-top:12px;">No session selected yet.</div>
+</section>
+<section class="section">
+<h3>Structured Symptoms</h3>
+<p class="helper">These come from persisted session state, not just the latest message.</p>
+<div class="grid-two" id="dimensionGrid"></div>
+</section>
+<section class="section">
+<h3>Rubric Evidence</h3>
+<p class="helper">The current rubric set that will feed repertory scoring.</p>
+<div class="rubric-list" id="rubricList"></div>
+</section>
+<section class="section">
+<h3>Latest Extraction</h3>
+<p class="helper">What the most recent user message added or clarified.</p>
+<div class="chips" id="latestExtraction"></div>
+</section>
+<section class="section">
+<h3>Analysis Output</h3>
+<p class="helper">Run analysis when the DSS state is strong enough. Ranked remedies and excerpts will appear here.</p>
+<div class="chips" id="analysisSummary"></div>
+<div id="analysisRemedies" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
+<div id="analysisExcerpts" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;"></div>
+</section>
+</div>
+</div>
+</section>
+</div>
+<script>
+const API_BASE=window.location.origin;
+const appState={currentSessionId:null,session:null,sessionState:null,latestChat:null,analysis:null,messages:[]};
+const dimensionConfig=[
+{key:"location",label:"Location"},
+{key:"sensations",label:"Sensation"},
+{key:"modalities",label:"Modality"},
+{key:"mental_symptoms",label:"Mental"},
+{key:"generals",label:"Generals"},
+];
+function $(id){return document.getElementById(id)}
+function escapeHtml(value){return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
+function sentenceCase(value){if(!value)return"Unknown";return String(value).replace(/_/g," ").replace(/\b\w/g,(char)=>char.toUpperCase())}
+function formatDateTime(value){if(!value)return"Not available";const parsed=new Date(value);if(Number.isNaN(parsed.getTime()))return value;return parsed.toLocaleString()}
+function statusText(){if(!appState.currentSessionId)return"No active session";if(appState.latestChat?.analysis_ready)return"Analysis can be triggered now";if(appState.sessionState?.missing_dimensions?.length){return`Still collecting ${appState.sessionState.missing_dimensions.join(", ")}`}return"Collecting more characteristic evidence"}
+function setBusy(isBusy){["sendBtn","newSessionBtn","loadSessionBtn","refreshBtn"].forEach((id)=>{$(id).disabled=isBusy});$("analyseBtn").disabled=isBusy||!appState.currentSessionId}
+function showTyping(){$("typing").classList.add("active")}function hideTyping(){$("typing").classList.remove("active")}
+function pushSystemMessage(content){appState.messages.push({role:"system",content,created_at:new Date().toISOString()});renderMessages()}
+function renderMessages(){const container=$("chatMessages");container.innerHTML="";if(!appState.messages.length){container.innerHTML='<div class="message system">Start a new session or load one. The DSS panel will update after every message.</div>';return}appState.messages.forEach((message)=>{const node=document.createElement("div");node.className=`message ${message.role}`;node.innerHTML=`<div>${escapeHtml(message.content)}</div><small>${escapeHtml(sentenceCase(message.role))} ∑ ${escapeHtml(formatDateTime(message.created_at))}</small>`;container.appendChild(node)});container.scrollTop=container.scrollHeight}
+function renderSessionMeta(){const sessionLabel=appState.currentSessionId||"none";const stage=appState.sessionState?.stage||appState.session?.stage||"waiting";const missingCount=appState.sessionState?.missing_dimensions?.length??5;$("sessionMeta").innerHTML=`<span class="tag"><strong>Session:</strong> ${escapeHtml(sessionLabel)}</span><span class="tag"><strong>Stage:</strong> ${escapeHtml(sentenceCase(stage))}</span><span class="tag"><strong>Missing:</strong> ${escapeHtml(`${missingCount} dimensions`)}</span><span class="tag"><strong>Last Update:</strong> ${escapeHtml(formatDateTime(appState.sessionState?.last_updated||appState.session?.updated_at))}</span>`}
+function renderStatusBlocks(){const stage=appState.sessionState?.stage||appState.session?.stage||"No Session";const rubricCount=appState.sessionState?.rubrics?.length||0;const missingCount=appState.sessionState?.missing_dimensions?.length??5;const extractionCount=appState.latestChat?.symptoms_extracted?.length||0;const ready=!!appState.latestChat?.analysis_ready;$("heroStage").textContent=appState.currentSessionId?sentenceCase(stage):"No Session";$("heroReady").textContent=ready?"Ready":"Waiting";$("heroRubrics").textContent=String(rubricCount);$("heroMissing").textContent=String(missingCount);$("stateStage").textContent=appState.currentSessionId?sentenceCase(stage):"No Session";$("stateRubrics").textContent=String(rubricCount);$("stateMissing").textContent=String(missingCount);$("stateExtraction").textContent=String(extractionCount);const analysisBadge=$("analysisBadge");analysisBadge.textContent=ready?"Analysis ready to run":"Waiting for enough rubric evidence";analysisBadge.className=`badge ${ready?"ready":""}`;const stageBadge=$("stageBadge");stageBadge.textContent=appState.currentSessionId?`${sentenceCase(stage)} ∑ ${statusText()}`:"No active session";stageBadge.className=`badge ${ready?"ready":""}`}
+function renderSnapshot(){const chips=[];const stage=appState.sessionState?.stage||appState.session?.stage;if(stage)chips.push(`<span class="chip">Stage: ${escapeHtml(sentenceCase(stage))}</span>`);chips.push(`<span class="chip ${appState.latestChat?.analysis_ready?"":"warn"}">Analysis: ${appState.latestChat?.analysis_ready?"Ready":"Not ready"}</span>`);chips.push(`<span class="chip ghost">Rubrics: ${escapeHtml(String(appState.sessionState?.rubrics?.length||0))}</span>`);$("snapshotChips").innerHTML=chips.join("");$("nextActionText").textContent=appState.currentSessionId?statusText():"No session selected yet."}
+function renderDimensionGrid(){const container=$("dimensionGrid");container.innerHTML="";dimensionConfig.forEach(({key,label})=>{const values=appState.sessionState?.[key]||[];const card=document.createElement("div");card.className="mini-card";const items=values.length?values.map((value)=>`<li>${escapeHtml(value)}</li>`).join(""):'<li class="empty">No structured evidence yet</li>';card.innerHTML=`<h4>${escapeHtml(label)}</h4><ul>${items}</ul>`;container.appendChild(card)})}
+function renderRubrics(){const rubrics=appState.sessionState?.rubrics||[];$("rubricList").innerHTML=rubrics.length?rubrics.map((rubric)=>`<span class="chip">${escapeHtml(rubric)}</span>`).join(""):'<span class="empty">No rubric evidence stored yet.</span>'}
+function renderLatestExtraction(){const extracted=appState.latestChat?.symptoms_extracted||[];$("latestExtraction").innerHTML=extracted.length?extracted.map((item)=>{const parts=[item.text];if(item.dimension)parts.push(sentenceCase(item.dimension));if(item.rubric_path)parts.push(item.rubric_path);return`<span class="chip">${escapeHtml(parts.join(" ∑ "))}</span>`}).join(""):'<span class="empty">No recent extraction available.</span>'}
+function renderAnalysis(){const summary=$("analysisSummary");const remedies=$("analysisRemedies");const excerpts=$("analysisExcerpts");summary.innerHTML="";remedies.innerHTML="";excerpts.innerHTML="";if(!appState.analysis){summary.innerHTML='<span class="empty">No analysis run yet.</span>';return}summary.innerHTML=`<span class="chip">Generated ${escapeHtml(formatDateTime(appState.analysis.generated_at))}</span><span class="chip">${escapeHtml(String(appState.analysis.top_remedies.length))} remedy candidates</span><span class="chip ghost">${escapeHtml(String(appState.analysis.rubrics_used.length))} rubrics used</span>`;appState.analysis.top_remedies.forEach((item)=>{const node=document.createElement("article");node.className="analysis-card";node.innerHTML=`<header><h4>${escapeHtml(item.remedy)}</h4><div class="score">${escapeHtml(item.final_score.toFixed(4))}</div></header><div class="meter"><span style="width:${Math.min(item.final_score*100,100)}%"></span></div><div class="analysis-meta"><span>Repertory ${escapeHtml(String(item.repertory_score))}</span><span>RAG ${escapeHtml(String(item.rag_score))}</span><span>Outcome ${escapeHtml(String(item.outcome_prior))}</span></div><div class="chips">${item.matching_rubrics.map((rubric)=>`<span class="chip ghost">${escapeHtml(rubric)}</span>`).join("")}</div>`;remedies.appendChild(node)});const explanation=document.createElement("article");explanation.className="analysis-card";explanation.innerHTML=`<h4>Explanation</h4><p>${escapeHtml(appState.analysis.explanation)}</p>`;excerpts.appendChild(explanation);appState.analysis.materia_medica.forEach((item)=>{const node=document.createElement("article");node.className="analysis-card";node.innerHTML=`<header><h4>${escapeHtml(item.remedy)}</h4><div class="score">${escapeHtml(item.confidence.toFixed(2))}</div></header><div class="analysis-meta"><span>${escapeHtml(item.source)}</span></div><p>${escapeHtml(item.text)}</p>`;excerpts.appendChild(node)})}
+function renderAll(){renderMessages();renderSessionMeta();renderStatusBlocks();renderSnapshot();renderDimensionGrid();renderRubrics();renderLatestExtraction();renderAnalysis()}
+async function apiFetch(path,options={}){const response=await fetch(`${API_BASE}${path}`,{headers:{"Content-Type":"application/json",...(options.headers||{})},...options});if(!response.ok){let detail=response.statusText;try{const data=await response.json();detail=data.detail||JSON.stringify(data)}catch(_err){detail=await response.text()}throw new Error(detail)}return response.json()}
+async function loadHistory(){if(!appState.currentSessionId)return;const history=await apiFetch(`/api/v1/chat/${appState.currentSessionId}/history`);appState.messages=history.length?history:[{role:"system",content:"Session loaded. No messages yet.",created_at:new Date().toISOString()}]}
+async function loadState(){if(!appState.currentSessionId)return;appState.sessionState=await apiFetch(`/api/v1/sessions/${appState.currentSessionId}/state`)}
+async function refreshSessionData(showMessage=true){if(!appState.currentSessionId){if(showMessage)pushSystemMessage("Create or load a session first.");return}try{await Promise.all([apiFetch(`/api/v1/sessions/${appState.currentSessionId}`).then((data)=>{appState.session=data}),loadHistory(),loadState()]);if(showMessage)pushSystemMessage("Session state refreshed.");renderAll()}catch(error){pushSystemMessage(`Could not refresh session: ${error.message}`)}}
+async function createSession(){setBusy(true);try{const session=await apiFetch("/api/v1/sessions",{method:"POST",body:JSON.stringify({})});appState.currentSessionId=session.id;appState.session=session;appState.sessionState=null;appState.latestChat=null;appState.analysis=null;appState.messages=[{role:"system",content:"New session created. Begin the case intake.",created_at:new Date().toISOString()}];$("sessionId").value=session.id;await refreshSessionData(false)}catch(error){pushSystemMessage(`Could not create session: ${error.message}`)}finally{setBusy(false);renderAll()}}
+async function loadSession(sessionId=$("sessionId").value.trim()){if(!sessionId){pushSystemMessage("Enter a session ID to load.");return}setBusy(true);try{appState.currentSessionId=sessionId;$("sessionId").value=sessionId;appState.session=await apiFetch(`/api/v1/sessions/${sessionId}`);await Promise.all([loadHistory(),loadState()]);pushSystemMessage(`Loaded session ${sessionId}.`);renderAll()}catch(error){appState.currentSessionId=null;pushSystemMessage(`Could not load session: ${error.message}`);renderAll()}finally{setBusy(false)}}
+async function sendMessage(){const input=$("messageInput");const message=input.value.trim();if(!message)return;if(!appState.currentSessionId){pushSystemMessage("Create or load a session first.");return}setBusy(true);showTyping();try{const chat=await apiFetch(`/api/v1/chat/${appState.currentSessionId}/message`,{method:"POST",body:JSON.stringify({message})});input.value="";appState.latestChat=chat;await Promise.all([loadHistory(),loadState()]);if(chat.analysis_ready){pushSystemMessage("Analysis is ready. Review the DSS panel and trigger analysis when appropriate.")}renderAll()}catch(error){pushSystemMessage(`Message failed: ${error.message}`);renderAll()}finally{hideTyping();setBusy(false)}}
+async function runAnalysis(){if(!appState.currentSessionId){pushSystemMessage("Create or load a session first.");return}setBusy(true);try{appState.analysis=await apiFetch(`/api/v1/chat/${appState.currentSessionId}/analyse`,{method:"POST"});await refreshSessionData(false);pushSystemMessage("Analysis completed. Review ranked remedies and excerpts in the DSS panel.");renderAll()}catch(error){pushSystemMessage(`Analysis failed: ${error.message}`);renderAll()}finally{setBusy(false)}}
+function handleComposerKey(event){if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendMessage()}}
+async function boot(){renderAll();const params=new URLSearchParams(window.location.search);const sessionParam=params.get("session");if(sessionParam){$("sessionId").value=sessionParam;await loadSession(sessionParam)}}
+boot();
+</script>
 </body>
 </html>

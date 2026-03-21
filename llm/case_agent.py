@@ -5,7 +5,11 @@ Wraps LLM API calls.
 Handles: case-taking conversation, explanation generation.
 """
 
+import asyncio
+import json
 import logging
+from urllib import error, request
+
 from core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -56,7 +60,7 @@ class LLMClient:
 
     def __init__(self):
         self.provider = settings.LLM_PROVIDER
-        self.model    = settings.LLM_MODEL
+        self.model = settings.LLM_MODEL
 
     async def complete(self, prompt: str, max_tokens: int = 1000) -> str:
         """
@@ -82,6 +86,12 @@ class LLMClient:
             )
             return response.choices[0].message.content
         """
+        if self.provider == "openrouter":
+            return await self._openrouter_chat_completion(
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_tokens,
+            )
+
         raise NotImplementedError(
             f"Configure LLM provider '{self.provider}' in core/config.py "
             f"and implement LLMClient.complete()"
@@ -110,7 +120,80 @@ class LLMClient:
             )
             return response.content[0].text
         """
+        if self.provider == "openrouter":
+            payload_messages = [{"role": "system", "content": system}] + messages
+            return await self._openrouter_chat_completion(
+                messages=payload_messages,
+                max_tokens=max_tokens,
+            )
+
         raise NotImplementedError("Implement LLMClient.chat()")
+
+    async def _openrouter_chat_completion(
+        self,
+        messages: list[dict],
+        max_tokens: int,
+    ) -> str:
+        api_key = settings.OPENROUTER_API_KEY.strip()
+        if not api_key:
+            raise NotImplementedError("Set OPENROUTER_API_KEY to use the openrouter provider")
+
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+        }
+
+        response_data = await asyncio.to_thread(self._post_openrouter_request, payload, api_key)
+        return self._extract_chat_content(response_data)
+
+    def _post_openrouter_request(self, payload: dict, api_key: str) -> dict:
+        base_url = settings.OPENROUTER_BASE_URL.rstrip("/")
+        endpoint = f"{base_url}/chat/completions"
+        body = json.dumps(payload).encode("utf-8")
+        req = request.Request(
+            endpoint,
+            data=body,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": settings.OPENROUTER_HTTP_REFERER,
+                "X-Title": settings.OPENROUTER_APP_TITLE,
+            },
+        )
+
+        try:
+            with request.urlopen(req, timeout=60) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            logger.error("OpenRouter HTTP error %s: %s", exc.code, detail)
+            raise RuntimeError(f"OpenRouter request failed ({exc.code}): {detail}") from exc
+        except error.URLError as exc:
+            logger.error("OpenRouter connection error: %s", exc)
+            raise RuntimeError(f"OpenRouter connection failed: {exc.reason}") from exc
+
+    @staticmethod
+    def _extract_chat_content(response_data: dict) -> str:
+        choices = response_data.get("choices", [])
+        if not choices:
+            raise RuntimeError("OpenRouter response did not include any choices")
+
+        message = choices[0].get("message", {})
+        content = message.get("content")
+        if isinstance(content, str) and content.strip():
+            return content.strip()
+
+        if isinstance(content, list):
+            text_parts = []
+            for item in content:
+                if isinstance(item, dict) and item.get("type") == "text" and item.get("text"):
+                    text_parts.append(item["text"])
+            if text_parts:
+                return "\n".join(text_parts).strip()
+
+        raise RuntimeError("OpenRouter response did not contain message text")
 
 
 class CaseAgent:

@@ -27,11 +27,15 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379"
 
     # ── LLM ──────────────────────────────────────────────
-    LLM_PROVIDER:   str = "anthropic"          # anthropic | openai | mistral
+    LLM_PROVIDER:   str = "anthropic"          # anthropic | openai | openrouter | mistral
     LLM_MODEL:      str = "claude-sonnet-4-20250514"
     LLM_MAX_TOKENS: int = 1000
     ANTHROPIC_API_KEY: str = ""
     OPENAI_API_KEY:    str = ""
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    OPENROUTER_HTTP_REFERER: str = "http://localhost:8000"
+    OPENROUTER_APP_TITLE: str = "Homeopathy AI DSS"
 
     # ── Embeddings ────────────────────────────────────────
     EMBEDDING_MODEL:  str = "sentence-transformers/all-MiniLM-L6-v2"

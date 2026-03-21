@@ -55,6 +55,7 @@ async def send_message(
     session = await manager.get_session(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+    current_stage = session.stage
 
     # 1. Store user message
     user_msg = await manager.store_message(
@@ -70,7 +71,7 @@ async def send_message(
 
     # Advance stage on first message
     if session.stage == SessionStage.initial:
-        await manager.advance_stage(session_id)
+        current_stage = await manager.advance_stage(session_id)
 
     # 4. Check if enough rubrics collected for analysis
     analysis_ready = await manager.is_analysis_ready(session_id)
@@ -110,7 +111,7 @@ async def send_message(
     return ChatResponse(
         session_id=session_id,
         reply=reply,
-        stage=session.stage,
+        stage=current_stage,
         symptoms_extracted=extracted,
         analysis_ready=analysis_ready,
         message_id=assistant_msg.id,

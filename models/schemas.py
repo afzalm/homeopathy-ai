@@ -4,7 +4,6 @@ Pydantic schemas — request bodies and response models.
 
 from pydantic import BaseModel, Field
 from typing import Optional
-from uuid import UUID
 from datetime import datetime
 from database.models import SessionStage, SessionStatus, MessageRole, OutcomeResult
 
@@ -53,6 +52,8 @@ class ChatRequest(BaseModel):
 
 class SymptomExtracted(BaseModel):
     text:        str
+    dimension:   Optional[str] = None
+    normalized:  Optional[str] = None
     rubric_path: Optional[str]
     rubric_id:   Optional[int]
     confidence:  float
